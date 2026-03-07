@@ -1,0 +1,4 @@
+GET http://cse341-node-contacts-ccgs.onrender.com/contacts
+GET http://cse341-node-contacts-ccgs.onrender.com/contacts/69aa58b5fb33d540af4290b5
+GET http://localhost:3000/contacts
+GET http://localhost:3000/contacts/69aa58b5fb33d540af4290b5
