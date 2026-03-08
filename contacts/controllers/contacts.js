@@ -7,7 +7,7 @@ const getAllContacts = async (req, res) => {
     const contacts = await db.collection('contacts').find().toArray();
     res.status(200).json(contacts);
   } catch (err) {
-    res.status(500).json({ error: 'Something went wrong' });
+    res.status(500).json({ error: err.message });
   }
 };
 
@@ -23,7 +23,7 @@ const getSingleContact = async (req, res) => {
     }
     res.status(200).json(contact);
   } catch (err) {
-    res.status(500).json({ error: 'Something went wrong' });
+    res.status(500).json({ error: err.message });
   }
 };
 
@@ -41,7 +41,7 @@ const createContact = async (req, res) => {
     const result = await db.collection('contacts').insertOne(contact);
     res.status(201).json({ id: result.insertedId });
   } catch (err) {
-    res.status(500).json({ error: 'Something went wrong' });
+    res.status(500).json({ error: err.message });
   }
 };
 
@@ -65,7 +65,7 @@ const updateContact = async (req, res) => {
     }
     res.status(200).json({ message: 'Contact updated successfully' });
   } catch (err) {
-    res.status(500).json({ error: 'Something went wrong' });
+    res.status(500).json({ error: err.message });
   }
 };
 
@@ -81,7 +81,7 @@ const deleteContact = async (req, res) => {
     }
     res.status(200).json({ message: 'Contact deleted successfully' });
   } catch (err) {
-    res.status(500).json({ error: 'Something went wrong' });
+    res.status(500).json({ error: err.message});
   }
 };
 
