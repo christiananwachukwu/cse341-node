@@ -1,4 +1,45 @@
+### GET - all contacts (Live)
 GET http://cse341-node-contacts-ccgs.onrender.com/contacts
+
+### GET - single contact(Live)
 GET http://cse341-node-contacts-ccgs.onrender.com/contacts/69aa58b5fb33d540af4290b5
+
+### GET - all contacts (Local)
 GET http://localhost:3000/contacts
+
+### GET - single contact (Local)
 GET http://localhost:3000/contacts/69aa58b5fb33d540af4290b5
+
+###POST - Create a new contact (Local)
+POST http://localhost:300/contacts
+Content-Type: application/json
+{
+    "firstName": "strings",
+    "lastName": "strings",
+    "email": "strings@email.com"
+    "favoriteColor" "color",
+    "birthday": "0000-01-01"
+}
+### POST - Create a new contact (Live)
+POST https://cse341-node-contacts-ccgs.onrender.com/contacts
+Content-Type: application/json
+
+### PUT - Update a contact (Local)
+PUT http://localhost:3000/contacts/69aa58b5fb33d540af4290b5
+Content-Type: application/json
+{
+  "firstName": "strings",
+    "lastName": "strings",
+    "email": "updated@email.com"
+    "favoriteColor" "color",
+    "birthday": "0000-01-01"  
+}
+### PUT - Update a contact (Live)
+PUT https://cse341-node-contacts-ccgs.onrender.com/contacts/69aa58b5fb33d540af4290b5
+Content-Type: application/json
+
+### DELETE - Delete contact (Local)
+DELETE http://localhost:3000/contacts/69aa58b5fb33d540af4290b5
+
+### DELETE - Delete a contact (Live)
+DELETE https://cse341-node-contacts-ccgs.onrender.com/contacts/69aa58b5fb33d540af4290b5
