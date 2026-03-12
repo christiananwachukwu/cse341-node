@@ -7,8 +7,8 @@
   },
   "servers": [
     {
-      "url":"http://localhost:3000",
-      "description":"Local server"
+      "url": "http://localhost:3000",
+      "description": "Local server"
     },
     {
       "url": "https://cse341-node-contacts-ccgs.onrender.com",
@@ -124,7 +124,13 @@
     "schemas": {
       "Contact": {
         "type": "object",
-        "required": ["firstName", "lastName", "email", "favoriteColor", "birthday"],
+        "required": [
+          "firstName",
+          "lastName",
+          "email",
+          "favoriteColor",
+          "birthday"
+        ],
         "properties": {
           "firstName": {
             "type": "string"
