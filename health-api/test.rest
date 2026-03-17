@@ -1,0 +1,26 @@
+### Get all medicines
+GET http://localhost:8080/medicines
+
+### Get single medicine
+GET http://localhost:8080/medicines/69b8b21ba447563a193bb9be
+
+### Get all ailments
+GET http://localhost:8080/ailments
+
+### Get single ailment
+GET http://localhost:8080/ailments/69b8b347a447563a193bb9c3
+
+### Create a new medicine
+POST http://localhost:8080/medicines
+Content-Type: application/json
+
+{
+  "name": "Ibuprofen",
+  "dosage": "400mg",
+  "manufacturer": "Advil",
+  "sideEffects": "Stomach pain, heartburn, dizziness",
+  "price": 8.99,
+  "prescription": false,
+  "category": "Painkiller",
+  "description": "Used to treat pain, fever and inflammation"
+}
