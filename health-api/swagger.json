@@ -1,81 +1,103 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "Health Api",
-    "description": "API for managing medicines and ailments",
+    "title": "Health API",
+    "description": "API for managing medicines and ailments. POST, PUT and DELETE routes require authentication via Google OAuth.",
     "version": "1.0.0"
   },
   "host": "cse341-node-1-health-api.onrender.com",
   "basePath": "/",
   "schemes": ["https"],
+  "securityDefinitions": {
+    "OAuth2": {
+      "type": "oauth2",
+      "authorizationUrl": "https://accounts.google.com/o/oauth2/auth",
+      "flow": "implicit",
+      "scopes": {
+        "profile": "Access your Google profile",
+        "email": "Access your Google email"
+      }
+    }
+  },
   "paths": {
-    "/medicines/": {
+    "/auth/login": {
       "get": {
-        "description": "",
+        "summary": "Login with Google",
+        "description": "Redirects to Google OAuth login page",
+        "responses": {
+          "302": {
+            "description": "Redirects to Google login"
+          }
+        }
+      }
+    },
+    "/auth/logout": {
+      "get": {
+        "summary": "Logout",
+        "description": "Logs the user out",
+        "responses": {
+          "302": {
+            "description": "Redirects after logout"
+          }
+        }
+      }
+    },
+    "/auth/profile": {
+      "get": {
+        "summary": "Get logged in user profile",
+        "description": "Returns the profile of the currently logged in user",
+        "responses": {
+          "200": {
+            "description": "User profile returned successfully"
+          },
+          "401": {
+            "description": "Not logged in"
+          }
+        }
+      }
+    },
+    "/medicines": {
+      "get": {
+        "summary": "Get all medicines",
+        "description": "Returns a list of all medicines",
         "produces": ["application/json"],
         "responses": {
           "200": {
-            "description": "OK"
-          },
-          "500": {
-            "description": "Internal Server Error"
+            "description": "Successful operation"
           }
         }
       },
       "post": {
-        "description": "",
+        "summary": "Create a new medicine",
+        "description": "Adds a new medicine to the database. Requires authentication.",
+        "security": [{"OAuth2": ["profile", "email"]}],
         "parameters": [
           {
-            "name": "body",
             "in": "body",
+            "name": "body",
+            "required": true,
             "schema": {
-              "type": "object",
-              "properties": {
-                "name": {
-                  "example": "any"
-                },
-                "dosage": {
-                  "example": "any"
-                },
-                "manufacturer": {
-                  "example": "any"
-                },
-                "sideEffects": {
-                  "example": "any"
-                },
-                "price": {
-                  "example": "any"
-                },
-                "prescription": {
-                  "example": "any"
-                },
-                "category": {
-                  "example": "any"
-                },
-                "description": {
-                  "example": "any"
-                }
-              }
+              "$ref": "#/definitions/Medicine"
             }
           }
         ],
         "responses": {
           "201": {
-            "description": "Created"
+            "description": "Medicine created successfully"
           },
           "400": {
-            "description": "Bad Request"
+            "description": "Validation error"
           },
-          "500": {
-            "description": "Internal Server Error"
+          "401": {
+            "description": "Unauthorized - must be logged in"
           }
         }
       }
     },
     "/medicines/{id}": {
       "get": {
-        "description": "",
-        "produces": ["application/json"],
+        "summary": "Get a single medicine",
+        "description": "Returns a single medicine by ID",
         "parameters": [
           {
             "name": "id",
@@ -86,18 +108,17 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Successful operation"
           },
           "404": {
-            "description": "Not Found"
-          },
-          "500": {
-            "description": "Internal Server Error"
+            "description": "Medicine not found"
           }
         }
       },
       "put": {
-        "description": "",
+        "summary": "Update a medicine",
+        "description": "Updates an existing medicine by ID. Requires authentication.",
+        "security": [{"OAuth2": ["profile", "email"]}],
         "parameters": [
           {
             "name": "id",
@@ -106,56 +127,30 @@
             "type": "string"
           },
           {
-            "name": "body",
             "in": "body",
+            "name": "body",
+            "required": true,
             "schema": {
-              "type": "object",
-              "properties": {
-                "name": {
-                  "example": "any"
-                },
-                "dosage": {
-                  "example": "any"
-                },
-                "manufacturer": {
-                  "example": "any"
-                },
-                "sideEffects": {
-                  "example": "any"
-                },
-                "price": {
-                  "example": "any"
-                },
-                "prescription": {
-                  "example": "any"
-                },
-                "category": {
-                  "example": "any"
-                },
-                "description": {
-                  "example": "any"
-                }
-              }
+              "$ref": "#/definitions/Medicine"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Medicine updated successfully"
           },
-          "400": {
-            "description": "Bad Request"
+          "401": {
+            "description": "Unauthorized - must be logged in"
           },
           "404": {
-            "description": "Not Found"
-          },
-          "500": {
-            "description": "Internal Server Error"
+            "description": "Medicine not found"
           }
         }
       },
       "delete": {
-        "description": "",
+        "summary": "Delete a medicine",
+        "description": "Deletes a medicine by ID. Requires authentication.",
+        "security": [{"OAuth2": ["profile", "email"]}],
         "parameters": [
           {
             "name": "id",
@@ -166,81 +161,59 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Medicine deleted successfully"
+          },
+          "401": {
+            "description": "Unauthorized - must be logged in"
           },
           "404": {
-            "description": "Not Found"
-          },
-          "500": {
-            "description": "Internal Server Error"
+            "description": "Medicine not found"
           }
         }
       }
     },
-    "/ailments/": {
+    "/ailments": {
       "get": {
-        "description": "",
+        "summary": "Get all ailments",
+        "description": "Returns a list of all ailments",
         "produces": ["application/json"],
         "responses": {
           "200": {
-            "description": "OK"
-          },
-          "500": {
-            "description": "Internal Server Error"
+            "description": "Successful operation"
           }
         }
       },
       "post": {
-        "description": "",
+        "summary": "Create a new ailment",
+        "description": "Adds a new ailment to the database. Requires authentication.",
+        "security": [{"OAuth2": ["profile", "email"]}],
         "parameters": [
           {
-            "name": "body",
             "in": "body",
+            "name": "body",
+            "required": true,
             "schema": {
-              "type": "object",
-              "properties": {
-                "name": {
-                  "example": "any"
-                },
-                "symptoms": {
-                  "example": "any"
-                },
-                "description": {
-                  "example": "any"
-                },
-                "causes": {
-                  "example": "any"
-                },
-                "severity": {
-                  "example": "any"
-                },
-                "contagious": {
-                  "example": "any"
-                },
-                "treatment": {
-                  "example": "any"
-                }
-              }
+              "$ref": "#/definitions/Ailment"
             }
           }
         ],
         "responses": {
           "201": {
-            "description": "Created"
+            "description": "Ailment created successfully"
           },
           "400": {
-            "description": "Bad Request"
+            "description": "Validation error"
           },
-          "500": {
-            "description": "Internal Server Error"
+          "401": {
+            "description": "Unauthorized - must be logged in"
           }
         }
       }
     },
     "/ailments/{id}": {
       "get": {
-        "description": "",
-        "produces": ["application/json"],
+        "summary": "Get a single ailment",
+        "description": "Returns a single ailment by ID",
         "parameters": [
           {
             "name": "id",
@@ -251,18 +224,17 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Successful operation"
           },
           "404": {
-            "description": "Not Found"
-          },
-          "500": {
-            "description": "Internal Server Error"
+            "description": "Ailment not found"
           }
         }
       },
       "put": {
-        "description": "",
+        "summary": "Update an ailment",
+        "description": "Updates an existing ailment by ID. Requires authentication.",
+        "security": [{"OAuth2": ["profile", "email"]}],
         "parameters": [
           {
             "name": "id",
@@ -271,53 +243,30 @@
             "type": "string"
           },
           {
-            "name": "body",
             "in": "body",
+            "name": "body",
+            "required": true,
             "schema": {
-              "type": "object",
-              "properties": {
-                "name": {
-                  "example": "any"
-                },
-                "symptoms": {
-                  "example": "any"
-                },
-                "description": {
-                  "example": "any"
-                },
-                "causes": {
-                  "example": "any"
-                },
-                "severity": {
-                  "example": "any"
-                },
-                "contagious": {
-                  "example": "any"
-                },
-                "treatment": {
-                  "example": "any"
-                }
-              }
+              "$ref": "#/definitions/Ailment"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Ailment updated successfully"
           },
-          "400": {
-            "description": "Bad Request"
+          "401": {
+            "description": "Unauthorized - must be logged in"
           },
           "404": {
-            "description": "Not Found"
-          },
-          "500": {
-            "description": "Internal Server Error"
+            "description": "Ailment not found"
           }
         }
       },
       "delete": {
-        "description": "",
+        "summary": "Delete an ailment",
+        "description": "Deletes an ailment by ID. Requires authentication.",
+        "security": [{"OAuth2": ["profile", "email"]}],
         "parameters": [
           {
             "name": "id",
@@ -328,15 +277,44 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Ailment deleted successfully"
+          },
+          "401": {
+            "description": "Unauthorized - must be logged in"
           },
           "404": {
-            "description": "Not Found"
-          },
-          "500": {
-            "description": "Internal Server Error"
+            "description": "Ailment not found"
           }
         }
+      }
+    }
+  },
+  "definitions": {
+    "Medicine": {
+      "type": "object",
+      "required": ["name", "dosage", "manufacturer", "sideEffects", "price", "prescription", "category", "description"],
+      "properties": {
+        "name": {"type": "string"},
+        "dosage": {"type": "string"},
+        "manufacturer": {"type": "string"},
+        "sideEffects": {"type": "string"},
+        "price": {"type": "number"},
+        "prescription": {"type": "boolean"},
+        "category": {"type": "string"},
+        "description": {"type": "string"}
+      }
+    },
+    "Ailment": {
+      "type": "object",
+      "required": ["name", "symptoms", "description", "causes", "severity", "contagious", "treatment"],
+      "properties": {
+        "name": {"type": "string"},
+        "symptoms": {"type": "string"},
+        "description": {"type": "string"},
+        "causes": {"type": "string"},
+        "severity": {"type": "string"},
+        "contagious": {"type": "boolean"},
+        "treatment": {"type": "string"}
       }
     }
   }

@@ -13,10 +13,17 @@ const ailmentValidation = [
   body('treatment').notEmpty().withMessage('Treatment is required')
 ];
 
+const isAuthenticated = (req, res, next) => {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  res.status(401).json({ message: 'You must be logged in to perform this action'});
+};
+
 router.get('/', ailmentsController.getAll);
 router.get('/:id', ailmentsController.getSingle);
-router.post('/', ailmentValidation, ailmentsController.createAilment);
-router.put('/:id', ailmentValidation, ailmentsController.updateAilment);
-router.delete('/:id', ailmentsController.deleteAilment);
+router.post('/', isAuthenticated, ailmentValidation, ailmentsController.createAilment);
+router.put('/:id', isAuthenticated, ailmentValidation, ailmentsController.updateAilment);
+router.delete('/:id', isAuthenticated, ailmentsController.deleteAilment);
 
 module.exports = router;

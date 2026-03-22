@@ -14,10 +14,17 @@ const medicineValidation = [
   body('description').notEmpty().withMessage('Description is required')
 ];
 
+const isAuthenticated = (req, res, next) => {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  res.status(401).json({ message: 'You must be logged in to perform this action'});
+};
+
 router.get('/', medicinesController.getAll);
 router.get('/:id', medicinesController.getSingle);
-router.post('/', medicineValidation, medicinesController.createMedicine);
-router.put('/:id', medicineValidation, medicinesController.updateMedicine);
-router.delete('/:id', medicinesController.deleteMedicine);
+router.post('/', isAuthenticated, medicineValidation, medicinesController.createMedicine);
+router.put('/:id', isAuthenticated, medicineValidation, medicinesController.updateMedicine);
+router.delete('/:id', isAuthenticated, medicinesController.deleteMedicine);
 
 module.exports = router;
